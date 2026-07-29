@@ -19,7 +19,7 @@ cd php-fizzbuzz-api
 
 ## Installation
 
-Clone the project and install dependencies:
+Install dependencies:
 
 ```bash
 make install
