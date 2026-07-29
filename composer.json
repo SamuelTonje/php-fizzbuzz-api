@@ -1,4 +1,6 @@
 {
+    "name": "samueltonje/php-fizzbuzz-api",
+    "description": "A REST API developed with Symfony to expose an implementation of the FizzBuzz exercise.",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
