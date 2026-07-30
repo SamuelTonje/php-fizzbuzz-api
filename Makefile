@@ -16,6 +16,15 @@ install: ## Install the API
 test: ## Run test
 	docker compose exec php php bin/phpunit
 
+phpstan: ## Run PHPStan analysis
+	docker compose exec php vendor/bin/phpstan analyse
+
+cs-fixer: ## Fix PHP code style
+	docker compose exec php vendor/bin/php-cs-fixer fix
+
+cs-check: ## Check PHP code style
+	docker compose exec php vendor/bin/php-cs-fixer fix --dry-run --diff
+
 bash: ## Enter the php container
 	docker compose exec php bash
 
