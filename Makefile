@@ -10,7 +10,7 @@ up: ## Start the containers
 down: ## Stop the containers
 	docker compose down
 
-install: ## Install the API
+install: up ## Install the API
 	docker compose exec php composer install
 
 test: ## Run test
