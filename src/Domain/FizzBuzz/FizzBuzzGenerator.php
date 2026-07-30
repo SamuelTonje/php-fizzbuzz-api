@@ -26,7 +26,7 @@ final readonly class FizzBuzzGenerator
                 $value .= $str2;
             }
 
-            $result[] = '' !== $value ? $value : (string) $i;
+            $result[] = '' !== $value ? $value : $i;
         }
 
         return new FizzBuzzResult($result);

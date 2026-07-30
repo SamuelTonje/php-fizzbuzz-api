@@ -21,20 +21,20 @@ final class FizzBuzzGeneratorTest extends TestCase
 
         self::assertSame(
             [
-                '1',
-                '2',
+                1,
+                2,
                 'Fizz',
-                '4',
+                4,
                 'Buzz',
                 'Fizz',
-                '7',
-                '8',
+                7,
+                8,
                 'Fizz',
                 'Buzz',
-                '11',
+                11,
                 'Fizz',
-                '13',
-                '14',
+                13,
+                14,
                 'FizzBuzz',
             ],
             $result->values(),
@@ -53,13 +53,13 @@ final class FizzBuzzGeneratorTest extends TestCase
 
         self::assertSame(
             [
-                '1',
+                1,
                 'Foo',
-                '3',
+                3,
                 'FooBar',
-                '5',
+                5,
                 'Foo',
-                '7',
+                7,
                 'FooBar',
             ],
             $result->values(),
@@ -78,8 +78,8 @@ final class FizzBuzzGeneratorTest extends TestCase
 
         self::assertSame(
             [
-                '1',
-                '2',
+                1,
+                2,
             ],
             $result->values(),
         );
