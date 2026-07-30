@@ -1,6 +1,6 @@
 # FizzBuzz API
 
-REST API built with Symfony implementing the classic FizzBuzz exercise.
+REST API built with Symfony implementing the common FizzBuzz exercise for technical interview purpose.
 
 ## Stack
 
@@ -48,17 +48,13 @@ make up
 
 The API is available at:
 
-```text
-http://localhost:8080
-```
+[http://localhost:8080](http://localhost:8080)
 
 ## API Documentation
 
 Swagger UI is available at:
 
-```text
-http://localhost:8080/docs
-```
+[http://localhost:8080/docs](http://localhost:8080/docs)
 
 ## Endpoints
 
@@ -98,20 +94,20 @@ Response:
 
 ```json
 [
-    "1",
-    "2",
+    1,
+    2,
     "Fizz",
-    "4",
+    4,
     "Buzz",
     "Fizz",
-    "7",
-    "8",
+    7,
+    8,
     "Fizz",
     "Buzz",
-    "11",
+    11,
     "Fizz",
-    "13",
-    "14",
+    13,
+    14,
     "FizzBuzz"
 ]
 ```
