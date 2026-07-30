@@ -25,6 +25,9 @@ cs-fixer: ## Fix PHP code style
 cs-check: ## Check PHP code style
 	docker compose exec php vendor/bin/php-cs-fixer fix --dry-run --diff
 
+deptrac: ## Architecture check
+	docker compose exec php vendor/bin/deptrac analyse
+
 bash: ## Enter the php container
 	docker compose exec php bash
 

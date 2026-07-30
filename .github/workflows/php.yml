@@ -57,5 +57,8 @@ jobs:
       - name: Check code style
         run: composer cs-fixer-check
 
+      - name: Architecture check
+        run: composer deptrac
+
       - name: Run tests
         run: composer test
