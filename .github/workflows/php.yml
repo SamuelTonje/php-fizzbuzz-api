@@ -51,5 +51,11 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
+      - name: Run PHPStan
+        run: composer phpstan
+
+      - name: Check code style
+        run: composer cs-fixer-check
+
       - name: Run tests
-        run: php bin/phpunit
+        run: composer test
