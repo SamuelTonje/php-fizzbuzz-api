@@ -13,5 +13,6 @@ final readonly class GenerateFizzBuzzCommand
         public string $str1,
         public string $str2,
     ) {
+        // could assert some validation rules here
     }
 }

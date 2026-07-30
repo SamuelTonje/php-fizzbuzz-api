@@ -102,7 +102,7 @@ final readonly class GenerateFizzBuzzController
 
     public function __invoke(
         #[MapRequestBody]
-        GenerateFizzBuzzRequest $request
+        GenerateFizzBuzzRequest $request,
     ): JsonResponse {
         $command = new GenerateFizzBuzzCommand(
             int1: $request->int1,
@@ -112,7 +112,7 @@ final readonly class GenerateFizzBuzzController
             str2: $request->str2,
         );
 
-        $response = $this->handler->handle($command);
+        $response = ($this->handler)($command);
 
         return new JsonResponse($response->values());
     }

@@ -23,15 +23,16 @@ final readonly class RequestBodyValueResolver implements ValueResolverInterface
     }
 
     /**
+     * @return iterable<object>
+     *
      * @throws \JsonException
      * @throws ExceptionInterface
-     * @return iterable<object>
      */
     public function resolve(
         Request $request,
         ArgumentMetadata $argument,
     ): iterable {
-        if ([] === $argument->getAttributes(MapRequestBody::class, ArgumentMetadata::IS_INSTANCEOF)) {
+        if (!$argument->getAttributes(MapRequestBody::class, ArgumentMetadata::IS_INSTANCEOF)) {
             return [];
         }
 

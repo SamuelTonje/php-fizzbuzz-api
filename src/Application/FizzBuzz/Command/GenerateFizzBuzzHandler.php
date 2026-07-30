@@ -14,7 +14,7 @@ final readonly class GenerateFizzBuzzHandler
     ) {
     }
 
-    public function handle(
+    public function __invoke(
         GenerateFizzBuzzCommand $command,
     ): FizzBuzzResult {
         return $this->generator->generate(
