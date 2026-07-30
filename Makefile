@@ -25,6 +25,22 @@ cs-fixer: ## Fix PHP code style
 cs-check: ## Check PHP code style
 	docker compose exec php vendor/bin/php-cs-fixer fix --dry-run --diff
 
+deptrac: ## Architecture check
+	docker compose exec php vendor/bin/deptrac analyse
+
+.PHONY: all lint
+
+all: ## Run all quality checks
+	$(MAKE) lint
+	$(MAKE) cs-check
+	$(MAKE) phpstan
+	$(MAKE) deptrac
+	$(MAKE) test
+
+lint: ## Lint PHP and Symfony configuration
+	docker compose exec php php bin/console lint:container
+	docker compose exec php php bin/console lint:yaml config
+
 bash: ## Enter the php container
 	docker compose exec php bash
 

@@ -1,6 +1,6 @@
 # FizzBuzz API
 
-REST API developed with Symfony to expose an implementation of the famous FizzBuzz exercise.
+REST API built with Symfony implementing the classic FizzBuzz exercise.
 
 ## Stack
 
@@ -11,14 +11,16 @@ REST API developed with Symfony to expose an implementation of the famous FizzBu
 * PHPUnit
 * PHPStan
 * PHP CS Fixer
+* Deptrac
+* NelmioApiDocBundle (OpenAPI)
 
 ## Architecture
 
-The project follows a pragmatic **DDD and Hexagonal Architecture** approach.
+The project follows a pragmatic DDD / Hexagonal Architecture.
 
-* **Domain**: business rules and FizzBuzz logic
-* **Application**: use cases and application workflows
-* **Infrastructure/Symfony**: HTTP controllers, framework integration and technical concerns
+* **Domain**: business logic
+* **Application**: use cases
+* **Infrastructure**: Symfony controllers, HTTP layer, validation and framework integration
 
 ## Installation
 
@@ -38,7 +40,7 @@ make install
 
 ## Running the application
 
-Start the Docker environment:
+Start the application:
 
 ```bash
 make up
@@ -52,24 +54,66 @@ http://localhost:8080
 
 ## API Documentation
 
-OpenAPI documentation is available through Swagger UI:
+Swagger UI is available at:
 
+```text
 http://localhost:8080/docs
+```
 
-## Health Check
+## Endpoints
 
-The application exposes a health check endpoint:
+### Health check
 
 ```http
 GET /health
 ```
 
-Example response:
+Response:
 
 ```json
 {
     "status": "ok"
 }
+```
+
+### Generate FizzBuzz
+
+```http
+POST /api/fizzbuzz
+```
+
+Request:
+
+```json
+{
+    "int1": 3,
+    "int2": 5,
+    "limit": 15,
+    "str1": "Fizz",
+    "str2": "Buzz"
+}
+```
+
+Response:
+
+```json
+[
+    "1",
+    "2",
+    "Fizz",
+    "4",
+    "Buzz",
+    "Fizz",
+    "7",
+    "8",
+    "Fizz",
+    "Buzz",
+    "11",
+    "Fizz",
+    "13",
+    "14",
+    "FizzBuzz"
+]
 ```
 
 ## Available commands
@@ -86,12 +130,15 @@ Main commands:
 make up          # Start containers
 make down        # Stop containers
 make install     # Install dependencies
-make test        # Run PHPUnit tests
-make phpstan     # Run PHPStan analysis
-make cs-fixer    # Fix code style
-make cs-check    # Check code style
-make bash        # Enter PHP container
-make logs        # Display logs
+make test        # Run PHPUnit
+make phpstan     # Run static analysis
+make deptrac     # Check architecture rules
+make lint        # Lint Symfony container and YAML
+make cs-fixer    # Fix coding standards
+make cs-check    # Check coding standards
+make bash        # Open a shell in the PHP container
+make logs        # Show application logs
+make all         # Run all quality checks
 ```
 
 ## Tests
@@ -102,38 +149,30 @@ Run the test suite:
 make test
 ```
 
-## Code Quality
+The project contains both unit and functional tests.
 
-Static analysis:
+## Code quality
 
-```bash
-make phpstan
-```
-
-Code style validation:
+Run all checks before pushing your changes:
 
 ```bash
-make cs-check
+make all
 ```
 
-Apply code style fixes:
+This command runs:
 
-```bash
-make cs-fixer
-```
+* Symfony lint
+* PHP CS Fixer
+* PHPStan
+* Deptrac
+* PHPUnit
 
 ## Continuous Integration
 
-GitHub Actions automatically runs:
+GitHub Actions runs the following checks on every push and pull request:
 
 * Composer validation
-* Dependency installation
-* PHPStan analysis
-* PHP CS Fixer validation
-* PHPUnit tests
-
-on every push and pull request.
-
-## Evolution
-
-This README will be enriched as the project evolves.
+* PHP CS Fixer
+* PHPStan
+* Deptrac
+* PHPUnit
