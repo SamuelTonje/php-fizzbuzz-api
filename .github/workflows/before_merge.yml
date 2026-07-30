@@ -12,9 +12,28 @@ permissions:
   contents: read
 
 jobs:
-  php:
+  app_step_check:
 
     runs-on: ubuntu-latest
+
+    env:
+      DATABASE_URL: mysql://app:app@127.0.0.1:3306/fizzbuzz
+
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: fizzbuzz
+          MYSQL_USER: app
+          MYSQL_PASSWORD: app
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
 
     steps:
       - name: Checkout repository
@@ -24,7 +43,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.4"
-          extensions: mbstring, intl, xml
+          extensions: mbstring, intl, xml, pdo_mysql
           tools: composer:v2
           coverage: none
 
@@ -50,6 +69,9 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run database migrations
+        run: composer migration
 
       - name: Run PHPStan
         run: composer phpstan
