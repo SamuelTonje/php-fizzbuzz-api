@@ -50,6 +50,12 @@ The API is available at:
 http://localhost:8080
 ```
 
+## API Documentation
+
+OpenAPI documentation is available through Swagger UI:
+
+http://localhost:8080/docs
+
 ## Health Check
 
 The application exposes a health check endpoint:

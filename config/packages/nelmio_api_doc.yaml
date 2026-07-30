@@ -1,0 +1,11 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: FizzBuzz API
+            description: REST API implementing the FizzBuzz exercise
+            version: 1.0.0
+
+    areas:
+        path_patterns:
+            - ^/api
+            - ^/health
