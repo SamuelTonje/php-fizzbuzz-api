@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\Symfony\Persistence\Doctrine\Repository;
 
+use App\Application\FizzBuzz\Command\FizzBuzzStatisticsRepositoryInterface;
+use App\Application\FizzBuzz\Command\GenerateFizzBuzzCommand;
 use App\Infrastructure\Symfony\Persistence\Doctrine\Entity\FizzBuzzStatistics;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -9,35 +11,43 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<FizzBuzzStatistics>
  */
-class FizzBuzzStatisticsRepository extends ServiceEntityRepository
+class FizzBuzzStatisticsRepository extends ServiceEntityRepository implements FizzBuzzStatisticsRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, FizzBuzzStatistics::class);
     }
 
-    //    /**
-    //     * @return FizzBuzzStatistic[] Returns an array of FizzBuzzStatistics objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function increment(GenerateFizzBuzzCommand $command): void
+    {
+        $statistic = $this->findOneBy([
+            'firstDivisor' => $command->int1,
+            'secondDivisor' => $command->int2,
+            'upperLimit' => $command->limit,
+            'firstReplacement' => $command->str1,
+            'secondReplacement' => $command->str2,
+        ]);
 
-    //    public function findOneBySomeField($value): ?FizzBuzzStatistics
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (null === $statistic) {
+            $statistic = new FizzBuzzStatistics();
+
+            $statistic
+                ->setFirstDivisor($command->int1)
+                ->setSecondDivisor($command->int2)
+                ->setUpperLimit($command->limit)
+                ->setFirstReplacement($command->str1)
+                ->setSecondReplacement($command->str2)
+                ->setHits(1)
+                ->setCreatedAt(new \DateTimeImmutable())
+                ->setUpdatedAt(new \DateTimeImmutable());
+
+            $this->getEntityManager()->persist($statistic);
+        } else {
+            $statistic
+                ->setHits($statistic->getHits() + 1)
+                ->setUpdatedAt(new \DateTimeImmutable());
+        }
+
+        $this->getEntityManager()->flush();
+    }
 }

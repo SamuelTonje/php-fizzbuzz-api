@@ -14,6 +14,7 @@ install: up ## Install the API
 	docker compose exec php composer install
 
 test: ## Run test
+	docker compose exec php php bin/console doctrine:migrations:migrate --env=test --no-interaction
 	docker compose exec php php bin/phpunit
 
 phpstan: ## Run PHPStan analysis

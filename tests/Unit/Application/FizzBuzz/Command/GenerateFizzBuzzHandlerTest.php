@@ -9,6 +9,7 @@ use App\Application\FizzBuzz\Command\GenerateFizzBuzzHandler;
 use App\Domain\FizzBuzz\FizzBuzzGenerator;
 use App\Domain\FizzBuzz\FizzBuzzResult;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class GenerateFizzBuzzHandlerTest extends TestCase
 {
@@ -16,6 +17,7 @@ final class GenerateFizzBuzzHandlerTest extends TestCase
     {
         $handler = new GenerateFizzBuzzHandler(
             new FizzBuzzGenerator(),
+            $this->createStub(EventDispatcherInterface::class),
         );
 
         $command = new GenerateFizzBuzzCommand(

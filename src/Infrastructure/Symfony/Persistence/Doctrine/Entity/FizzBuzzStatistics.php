@@ -7,19 +7,15 @@ namespace App\Infrastructure\Symfony\Persistence\Doctrine\Entity;
 use App\Infrastructure\Symfony\Persistence\Doctrine\Repository\FizzBuzzStatisticsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(
-    name: 'fizzbuzz_statistics',
-    uniqueConstraints: [
-        new ORM\UniqueConstraint(
-            name: 'uniq_fizzbuzz_statistics',
-            columns: [
-                'first_divisor',
-                'second_divisor',
-                'upper_limit',
-                'first_replacement',
-                'second_replacement',
-            ]
-        ),
+#[ORM\Table(name: 'fizzbuzz_statistics')]
+#[ORM\UniqueConstraint(
+    name: 'uniq_fizzbuzz_statistics',
+    columns: [
+        'first_divisor',
+        'second_divisor',
+        'upper_limit',
+        'first_replacement',
+        'second_replacement',
     ]
 )]
 #[ORM\Entity(repositoryClass: FizzBuzzStatisticsRepository::class)]
