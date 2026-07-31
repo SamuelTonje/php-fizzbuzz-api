@@ -2,8 +2,10 @@
 
 namespace App\Infrastructure\Symfony\Persistence\Doctrine\Repository;
 
-use App\Application\FizzBuzz\Command\FizzBuzzStatisticsRepositoryInterface;
 use App\Application\FizzBuzz\Command\GenerateFizzBuzzCommand;
+use App\Application\FizzBuzz\Repository\GetFizzBuzzStatisticsRepositoryInterface;
+use App\Application\FizzBuzz\Repository\IncrementFizzBuzzStatisticsRepositoryInterface;
+use App\Domain\FizzBuzz\MostUsedFizzBuzz;
 use App\Infrastructure\Symfony\Persistence\Doctrine\Entity\FizzBuzzStatistics;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -11,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<FizzBuzzStatistics>
  */
-class FizzBuzzStatisticsRepository extends ServiceEntityRepository implements FizzBuzzStatisticsRepositoryInterface
+class FizzBuzzStatisticsRepository extends ServiceEntityRepository implements IncrementFizzBuzzStatisticsRepositoryInterface, GetFizzBuzzStatisticsRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -49,5 +51,27 @@ class FizzBuzzStatisticsRepository extends ServiceEntityRepository implements Fi
         }
 
         $this->getEntityManager()->flush();
+    }
+
+    public function findMostUsed(): ?MostUsedFizzBuzz
+    {
+        $statistics = $this->createQueryBuilder('s')
+            ->orderBy('s.hits', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (null === $statistics) {
+            return null;
+        }
+
+        return new MostUsedFizzBuzz(
+            $statistics->getFirstDivisor(),
+            $statistics->getSecondDivisor(),
+            $statistics->getUpperLimit(),
+            $statistics->getFirstReplacement(),
+            $statistics->getSecondReplacement(),
+            $statistics->getHits(),
+        );
     }
 }
