@@ -146,6 +146,27 @@ The statistics table stores:
 
 If the same FizzBuzz configuration is requested multiple times, the existing record is updated and the `hits` counter is incremented.
 
+### Get most used FizzBuzz parameters
+
+```http
+GET /api/fizzbuzz/statistics
+```
+
+Response:
+
+```json
+{
+    "int1": 3,
+    "int2": 5,
+    "limit": 15,
+    "str1": "Fizz",
+    "str2": "Buzz",
+    "hits": 42
+}
+```
+
+Returns the most frequently used FizzBuzz configuration based on the execution counter.
+
 ## Database migrations
 
 Create a migration:
@@ -204,7 +225,6 @@ make test
 The project contains:
 
 * Unit tests
-* Functional API tests
 * End-to-end tests
 
 The test workflow automatically:
