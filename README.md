@@ -49,6 +49,12 @@ Start the application:
 make up
 ```
 
+Test all the stack:
+
+```bash
+make all
+```
+
 The API is available at:
 
 [http://localhost:8080](http://localhost:8080)
@@ -166,28 +172,6 @@ Response:
 ```
 
 Returns the most frequently used FizzBuzz configuration based on the execution counter.
-
-## Database migrations
-
-Create a migration:
-
-```bash
-php bin/console make:migration
-```
-
-Execute migrations:
-
-Development:
-
-```bash
-php bin/console doctrine:migrations:migrate
-```
-
-Test environment:
-
-```bash
-php bin/console doctrine:migrations:migrate --env=test --no-interaction
-```
 
 ## Available commands
 

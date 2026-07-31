@@ -57,23 +57,6 @@ final class GenerateFizzBuzzControllerTest extends DatabaseTestCase
         );
     }
 
-    public function testReturnsBadRequestWhenBodyIsEmpty(): void
-    {
-        $client = static::createClient();
-        $this->startTransaction();
-
-        $client->request(
-            'POST',
-            '/api/fizzbuzz',
-            server: [
-                'CONTENT_TYPE' => 'application/json',
-            ],
-            content: '',
-        );
-
-        self::assertResponseStatusCodeSame(400);
-    }
-
     public function testReturnsBadRequestWhenJsonIsInvalid(): void
     {
         $client = static::createClient();
@@ -196,6 +179,31 @@ final class GenerateFizzBuzzControllerTest extends DatabaseTestCase
 
         self::assertNotNull($statistic);
         self::assertSame(1, $statistic->getHits());
+    }
+
+    public function testReturnsBadRequestWhenBodyIsEmpty(): void
+    {
+        $client = static::createClient();
+        $this->startTransaction();
+
+        $client->request(
+            'POST',
+            '/api/fizzbuzz',
+            server: [
+                'CONTENT_TYPE' => 'application/json',
+            ],
+            content: '',
+        );
+
+        self::assertResponseStatusCodeSame(400);
+
+        self::assertJsonStringEqualsJsonString(
+            json_encode([
+                'type' => 'bad_request',
+                'message' => 'Request body is empty.',
+            ], JSON_THROW_ON_ERROR),
+            $client->getResponse()->getContent(),
+        );
     }
 
     public static function divisorsProvider(): iterable

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Symfony\Resolver;
 
 use App\Infrastructure\Symfony\Attribute\MapRequestBody;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -45,7 +45,7 @@ final readonly class RequestBodyValueResolver implements ValueResolverInterface
         $content = $request->getContent();
 
         if ('' === trim($content)) {
-            throw new BadRequestException('Request body is empty.');
+            throw new BadRequestHttpException('Request body is empty.');
         }
 
         $object = $this->serializer->deserialize(
