@@ -2,6 +2,11 @@
 
 REST API built with Symfony implementing the common FizzBuzz exercise for technical interview purpose.
 
+## Prerequisites
+
+- Docker
+- Docker Compose
+
 ## Stack
 
 * PHP 8.4
@@ -47,12 +52,6 @@ Start the application:
 
 ```bash
 make up
-```
-
-Test all the stack:
-
-```bash
-make all
 ```
 
 The API is available at:
@@ -210,14 +209,6 @@ The project contains:
 
 * Unit tests
 * End-to-end tests
-
-The test workflow automatically:
-
-1. Creates the test database if it does not exist
-2. Runs Doctrine migrations
-3. Executes PHPUnit
-
-Database changes are isolated between tests using transactions.
 
 ## Code quality
 
