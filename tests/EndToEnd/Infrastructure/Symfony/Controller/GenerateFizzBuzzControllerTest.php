@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace App\Tests\EndToEnd\Infrastructure\Symfony\Controller;
 
 use App\Domain\FizzBuzz\FizzBuzzGenerator;
+use App\Infrastructure\Symfony\Persistence\Doctrine\Entity\FizzBuzzStatistics;
+use App\Tests\EndToEnd\DatabaseTestCase;
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-final class GenerateFizzBuzzControllerTest extends WebTestCase
+final class GenerateFizzBuzzControllerTest extends DatabaseTestCase
 {
     public function testGenerateFizzbuzz(): void
     {
         $client = static::createClient();
+        $this->startTransaction();
 
         $client->request(
             'POST',
@@ -57,6 +60,7 @@ final class GenerateFizzBuzzControllerTest extends WebTestCase
     public function testReturnsBadRequestWhenBodyIsEmpty(): void
     {
         $client = static::createClient();
+        $this->startTransaction();
 
         $client->request(
             'POST',
@@ -73,6 +77,7 @@ final class GenerateFizzBuzzControllerTest extends WebTestCase
     public function testReturnsBadRequestWhenJsonIsInvalid(): void
     {
         $client = static::createClient();
+        $this->startTransaction();
 
         $client->request(
             'POST',
@@ -89,6 +94,7 @@ final class GenerateFizzBuzzControllerTest extends WebTestCase
     public function testReturnsValidationErrors(): void
     {
         $client = static::createClient();
+        $this->startTransaction();
 
         $client->request(
             'POST',
@@ -114,6 +120,7 @@ final class GenerateFizzBuzzControllerTest extends WebTestCase
         int $int2,
     ): void {
         $client = static::createClient();
+        $this->startTransaction();
 
         $client->request(
             'POST',
@@ -145,6 +152,50 @@ final class GenerateFizzBuzzControllerTest extends WebTestCase
             ),
             $client->getResponse()->getContent(),
         );
+    }
+
+    public function testGenerateFizzbuzzCreatesStatistics(): void
+    {
+        $client = static::createClient();
+
+        $this->startTransaction();
+
+        $requestArray = [
+            'int1' => 3,
+            'int2' => 5,
+            'limit' => 15,
+            'str1' => 'Fizz',
+            'str2' => 'Buzz',
+        ];
+
+        $client->request(
+            'POST',
+            '/api/fizzbuzz',
+            server: [
+                'CONTENT_TYPE' => 'application/json',
+            ],
+            content: json_encode($requestArray, JSON_THROW_ON_ERROR),
+        );
+
+        self::assertResponseIsSuccessful();
+
+        $entityManager = self::getContainer()
+            ->get(EntityManagerInterface::class);
+
+        $entityManager->clear();
+
+        $statistic = $entityManager
+            ->getRepository(FizzBuzzStatistics::class)
+            ->findOneBy([
+                'firstDivisor' => 3,
+                'secondDivisor' => 5,
+                'upperLimit' => 15,
+                'firstReplacement' => 'Fizz',
+                'secondReplacement' => 'Buzz',
+            ]);
+
+        self::assertNotNull($statistic);
+        self::assertSame(1, $statistic->getHits());
     }
 
     public static function divisorsProvider(): iterable

@@ -8,6 +8,9 @@ REST API built with Symfony implementing the common FizzBuzz exercise for techni
 * Symfony 8.1
 * Docker
 * Nginx
+* MySQL 8.4
+* Doctrine ORM
+* Doctrine Migrations
 * PHPUnit
 * PHPStan
 * PHP CS Fixer
@@ -19,8 +22,8 @@ REST API built with Symfony implementing the common FizzBuzz exercise for techni
 The project follows a pragmatic DDD / Hexagonal Architecture.
 
 * **Domain**: business logic
-* **Application**: use cases
-* **Infrastructure**: Symfony controllers, HTTP layer, validation and framework integration
+* **Application**: use cases, commands and domain events
+* **Infrastructure**: Symfony controllers, HTTP layer, validation, Doctrine persistence and framework integration
 
 ## Installation
 
@@ -55,6 +58,18 @@ The API is available at:
 Swagger UI is available at:
 
 [http://localhost:8080/docs](http://localhost:8080/docs)
+
+## Database
+
+The application uses MySQL with Doctrine ORM.
+
+Database migrations are managed with Doctrine Migrations.
+
+Run migrations:
+
+```bash
+docker compose exec php php bin/console doctrine:migrations:migrate
+```
 
 ## Endpoints
 
@@ -112,6 +127,47 @@ Response:
 ]
 ```
 
+# Statistics
+
+The API now tracks FizzBuzz executions.
+
+Each request generates a `FizzBuzzGeneratedEvent` which is handled by a dedicated event listener.
+
+The statistics table stores:
+
+* first divisor
+* second divisor
+* upper limit
+* first replacement
+* second replacement
+* number of executions (`hits`)
+* creation date
+* update date
+
+If the same FizzBuzz configuration is requested multiple times, the existing record is updated and the `hits` counter is incremented.
+
+## Database migrations
+
+Create a migration:
+
+```bash
+php bin/console make:migration
+```
+
+Execute migrations:
+
+Development:
+
+```bash
+php bin/console doctrine:migrations:migrate
+```
+
+Test environment:
+
+```bash
+php bin/console doctrine:migrations:migrate --env=test --no-interaction
+```
+
 ## Available commands
 
 Display all available commands:
@@ -126,7 +182,7 @@ Main commands:
 make up          # Start containers
 make down        # Stop containers
 make install     # Install dependencies
-make test        # Run PHPUnit
+make test        # Prepare test database and run PHPUnit
 make phpstan     # Run static analysis
 make deptrac     # Check architecture rules
 make lint        # Lint Symfony container and YAML
@@ -145,7 +201,19 @@ Run the test suite:
 make test
 ```
 
-The project contains both unit and functional tests.
+The project contains:
+
+* Unit tests
+* Functional API tests
+* End-to-end tests
+
+The test workflow automatically:
+
+1. Creates the test database if it does not exist
+2. Runs Doctrine migrations
+3. Executes PHPUnit
+
+Database changes are isolated between tests using transactions.
 
 ## Code quality
 
@@ -168,7 +236,12 @@ This command runs:
 GitHub Actions runs the following checks on every push and pull request:
 
 * Composer validation
+* PHP dependency installation
+* Test database preparation
+* Doctrine migrations
 * PHP CS Fixer
 * PHPStan
 * Deptrac
 * PHPUnit
+
+The CI pipeline runs using the Symfony test environment.
